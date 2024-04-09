@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 n = np.arange(-1000, 1001)
 
 # Calculate the values of h_lp(n)
-h_lp = np.where((n != 0) & (n >= -100) & (n <= 100), np.sin(n * np.pi / 40) * np.cos(n * 0.342 * np.pi) / (n * np.pi), 0)
+h_lp = np.where((n != 0) & (n >= -100) & (n <= 100), 2 * np.sin(n * np.pi / 40) * np.cos(n * 0.342 * np.pi) / (n * np.pi), 0)
 
 # Compute the Discrete Fourier Transform (DFT) of h_lp(n)
 h_lp_fft = np.fft.fftshift(np.fft.fft(h_lp))
