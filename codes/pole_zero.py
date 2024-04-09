@@ -1,37 +1,43 @@
-from sympy import symbols, solve, simplify
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Define symbolic variable
-s = symbols('s')
+# Define constants
+epsilon = 0.4
+N = 4
 
-# Define the expression for H_{a,LP}(j\Omega_L)^2
-expression = (1 + 0.16 * (8 * s**4 - 8 * s**2 + 1)**2)
-expression = simplify(expression)
+# Compute theta
+theta = np.arcsinh(1 / epsilon) / N
 
-roots =  solve(expression, s)
+# Compute phi_k for k = 1 to 2N
+phi_k = [(2*k - 1) * np.pi / (2 * N) for k in range(1, 2*N+1)]
 
-# Extract the real and imaginary parts of the roots
-real_parts = [root.evalf().as_real_imag()[0] for root in roots]
-imag_parts = [root.evalf().as_real_imag()[1] for root in roots]
+# Compute poles
+poles = []
+x_values = []
+for k in range(1, 2*N+1):
+    pole = -np.sinh(theta) * np.sin(phi_k[k-1]) + 1j * np.cosh(theta) * np.cos(phi_k[k-1])
+    poles.append(pole)
+    x_values.append(np.real(pole))  # Append the real part of the pole as x value
 
-# Plot the pole-zero plot
-plt.scatter(real_parts, imag_parts, marker='x', color='r', label='Roots')
-plt.axhline(0, color='k', linestyle='--', linewidth=0.5)  # Horizontal line at y=0
-plt.axvline(0, color='k', linestyle='--', linewidth=0.5)  # Vertical line at x=0
-plt.xlabel('Real')
-plt.xlim(-2, 2)
-plt.ylabel('Imaginary')
-plt.ylim(-1, 1)
-plt.title('Pole-Zero Plot')
-plt.legend()
+# Save poles and corresponding x values to a text file
+with open('poles.txt', 'w') as file:
+    for x, pole in zip(x_values, poles):
+        file.write(f'{x} {pole.real} {pole.imag}\n')
+
+# Separate left and right poles
+left_poles = [pole for pole in poles if pole.real < 0]
+right_poles = [pole for pole in poles if pole.real > 0]
+
+# Plot poles
+plt.figure(figsize=(8, 6))
+plt.scatter([pole.real for pole in left_poles], [pole.imag for pole in left_poles], c='blue', marker='x', label='Left Poles')
+plt.scatter([pole.real for pole in right_poles], [pole.imag for pole in right_poles], c='red', marker='x', label='Right Poles')
+plt.title('Poles of the system')
+plt.xlabel('Real part')
+plt.ylabel('Imaginary part')
+plt.xlim(-1.5, 1.5)  # Set x-axis limits from -1.5 to 1.5
+plt.ylim(-1.2, 1.2)  # Set y-axis limits from -1.2 to 1.2
 plt.grid(True)
+plt.legend()
 plt.show()
 
-# Write the roots to a file
-with open('roots.txt', 'w') as file:
-    file.write("Real\tImaginary\n")
-    for real, imag in zip(real_parts, imag_parts):
-        file.write(f"{real}\t{imag}\n")
-
-print("Roots are stored in 'roots.txt' file.")
