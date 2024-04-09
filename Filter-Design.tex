@@ -42,9 +42,44 @@ The sampling rate for the filter has been specified as $F_s =  48$ kHz.	If the u
 \begin{enumerate}
 \item {\em Tolerances:}  The passband ($\delta_1$) and stopband ($\delta_2$) tolerances are given to
 be equal, so we let $\delta_1 = \delta_2 = \delta = 0.15$.
-\item {\em Passband:}  The passband of filter is $4+0.6j$ kHz to $4+0.6(j+2)$ kHz, where $j=(r-11000)\%\sigma$, $r =$ roll number (last five digits), and $\sigma =$ sum of those digits. For me $r = 11006$, so $\sigma = 8$, and $j = 6 \% 8 = 6$. So the passband range for the bandpass filter is from $7.6$ kHz to $8.8$ KHz. Hence, the un-normalized discrete time filter passband frequencies are $F_{p1} = 8.8$ kHz and $F_{p2} = 7.6$ kHz.  The corresponding normalized digital filter passband frequencies are $\omega_{p1} = 2\pi\frac{F_{p1}}{F_s}  = 0.367\pi$  and $\omega_{p2} = 2\pi\frac{F_{p2}}{F_s}  = 0.317 \pi$.  The centre frequency is then given by  $\omega_c = \frac{\omega_{p1} + \omega_{p2}}{2} = 0.342\pi$. 
+\item {\em Passband:}  The passband of filter is $4+0.6j$ kHz to $4+0.6(j+2)$ kHz, where 
+\begin{align}
+    j &= (r-11000)\%\sigma \\
+    r &= \text{roll number (last five digits)} \\
+    \sigma &= \text{sum of those digits}
+\end{align}
+In this project,
+\begin{align}
+    r &= 11006 \\
+ \text{so }   \sigma &= 8 \\
+  \text{and }  j &= 6 \% 8 = 6
+\end{align}
+So the passband range for the bandpass filter is from $7.6$ kHz to $8.8$ KHz. Hence, the un-normalized discrete time filter passband frequencies are 
+\begin{align}
+    F_{p1} &= 8.8 \text{kHz} \\
+    F_{p2} &= 7.6 \text{kHz}
+\end{align}
+The corresponding normalized digital filter passband frequencies are 
+\begin{align}
+    \omega_{p1} &= 2\pi\frac{F_{p1}}{F_s}  = 0.367\pi \\
+    \omega_{p2} &= 2\pi\frac{F_{p2}}{F_s}  = 0.317 \pi
+\end{align}
+The centre frequency is then given by  
+\begin{align}
+    \omega_c &= \frac{\omega_{p1} + \omega_{p2}}{2} \\
+             &= 0.342\pi
+\end{align}
 \item {\em Stopband:}  The {\em transition band} for bandpass filters is $\Delta F = 0.3$ kHz on either side of the passband.
-Hence, the un-normalized {\em stopband} frequencies are $F_{s1} = 8.8 + 0.3 = 9.1$ kHz and $F	_{s2} = 7.6 - 0.3 = 7.3$ kHz.  The corresponding normalized frequencies are $\omega_{s1} = 0.379 \pi$  and $\omega_{s2} =  0.304 \pi$.
+Hence, the un-normalized {\em stopband} frequencies are 
+\begin{align}
+    F_{s1} &= 8.8 + 0.3 = 9.1 \text{kHz} \\
+    F_{s2} &= 7.6 - 0.3 = 7.3 \text{kHz}
+\end{align}
+The corresponding normalized frequencies are 
+\begin{align}
+    \omega_{s1} &= 0.379 \pi \\
+    \omega_{s2} &=  0.304 \pi
+\end{align}
 \end{enumerate}
 \subsection{The Analog filter}
 In the bilinear transform, the analog filter frequency ($\Omega$) is related to the corresponding digital filter frequency ($\omega$) as $\Omega = \tan \frac{\omega}{2}$.  Using this relation, we obtain the analog passband and stopband frequencies as $\Omega_{p1} = 0.6502$, $\Omega_{p2} = 0.5436$ and $\Omega_{s1} = 0.6773$, $\Omega_{s2} = 0.5175$ respectively.
@@ -62,14 +97,29 @@ be the equivalent low pass filter, then
 \label{transition}
 \Omega_L = \frac{\Omega^2 - \Omega_0^2}{B\Omega}
 \end{equation}
-where $\Omega_0 = \sqrt{\Omega_{p1}\Omega_{p2}} = 0.5945$ and $B = \Omega_{p1} - \Omega_{p2} = 0.1066$.  The low pass filter has
-the passband edge at $\Omega_{Lp} = 1$ and stopband edges at $\Omega_{Ls_1} = 1.4583$ and $\Omega_{Ls_2} = -1.5525$.  We choose the stopband edge of the analog low pass filter as $\Omega_{Ls} = \mbox{min}(\vert \Omega_{Ls_1}\vert,\vert \Omega_{Ls_2}\vert) = 1.4583$.
+where 
+\begin{align}
+    \Omega_0 &= \sqrt{\Omega_{p1}\Omega_{p2}} = 0.5945 \\
+    B &= \Omega_{p1} - \Omega_{p2} = 0.1066 \\
+\end{align}
+The low pass filter has the passband edge at $\Omega_{Lp} = 1$ and stopband edges at $\Omega_{Ls_1} = 1.4583$ and $\Omega_{Ls_2} = -1.5525$.  We choose the stopband edge of the analog low pass filter as $\Omega_{Ls} = \mbox{min}(\vert \Omega_{Ls_1}\vert,\vert \Omega_{Ls_2}\vert) = 1.4583$.
 \item {\em The Low Pass Chebyschev Filter Paramters:}  The magnitude squared of the Chebyschev low pass filter is given by 
 \begin{equation}
 \label{lpfirst}
 \vert H_{a,LP}(j\Omega_L)\vert^2 = \frac{1}{1 + \epsilon^2c_N^2(\Omega_L/\Omega_{Lp})}
 \end{equation}
-where $c_N(x) = \cosh(N \cosh^{-1}x)$ and the integer $N$, which is the order of the filter, and $\epsilon$ are design paramters.  Since $\Omega_{Lp} = 1$, (\ref{lpfirst}) may be rewritten as
+where $c_N(x)$ is the Chebyshev's polynomial of order $N$ and given as,
+\begin{align}
+c_N(x) &= 
+\begin{cases} 
+\cosh(N\cosh^{-1}(x)) & \text{for } |x| > 1 \\
+\cos(N\cos^{-1}(x)) & \text{for } |x| < 1
+\end{cases} \\
+c_0(x) &= 1 \\
+c_1(x) &=x \\
+c_N(x) &= 2xc_{N-1}(x)-c_{N-2}(x)
+\end{align}
+$c_N(x)$ and the integer $N$, which is the order of the filter, and $\epsilon$ are design paramters.  Since $\Omega_{Lp} = 1$, (\ref{lpfirst}) may be rewritten as
 \begin{equation}
 \label{lpsecond}
 \vert H_{a,LP}(j\Omega_L)\vert^2 = \frac{1}{1 + \epsilon^2c_N^2(\Omega_L)}
@@ -80,8 +130,18 @@ Also, the design paramters have the following constraints
 \frac{\sqrt{D_2}}{c_N(\Omega_{Ls})} \leq \epsilon \leq \sqrt{D_1}, \nonumber \\
 N \geq \left\lceil \frac{\cosh^{-1}\sqrt{D_2/D_1}}{\cosh^{-1}\Omega_{Ls}} \right\rceil,
 \end{eqnarray}
-where $D_1 = \frac{1}{(1 - \delta)^2}-1$ and $D_2 = \frac{1}{\delta^2} - 1$.  After appropriate substitutions,
-we obtain $N \geq 4$ and $0.3268 \leq \epsilon \leq 0.6197$.  In Figure 1, we plot $\vert H(j\Omega_L)\vert$ for a range of values of $\epsilon$, for $N = 4$.  We find that for larger values of $\epsilon$, $|H(j\Omega_L)|$ decreases in the transition band.  We choose $\epsilon = 0.4$  for our IIR filter design.
+where 
+\begin{align}
+    D_1 &= \frac{1}{(1 - \delta)^2}-1 = 0.3841 \\
+    D_2 &= \frac{1}{\delta^2} - 1 = 43.4444
+\end{align}
+After appropriate substitutions,
+we obtain 
+\begin{align}
+    &N \geq 4 \\
+    0.3268 \leq &\epsilon \leq 0.6197
+\end{align}
+In Figure 2, we plot $\vert H(j\Omega_L)\vert$ for a range of values of $\epsilon$, for $N = 4$.  We find that for larger values of $\epsilon$, $|H(j\Omega_L)|$ decreases in the transition band.  We choose $\epsilon = 0.4$  for our IIR filter design.
 \item {\em The Low Pass Chebyschev Filter:} Thus, we obtain
 \begin{equation}
 \label{lpsqfinal}
@@ -92,40 +152,42 @@ where
 c_4(x) = 8x^4 - 8x^2 + 1.	
 \end{equation}
 The poles of the frequency response in (\ref{lpfirst}) lying in the left half plane are in general obtained as 
-$r_1\cos\phi_k + jr_2\sin \phi_k$, where
-\begin{eqnarray}
-\label{lppoles}
-\phi_k = \frac{\pi}{2} + \frac{(2k+1)\pi}{2N}, k = 0, 1, \dots, N-1 \nonumber \\
-r_1 = \frac{\beta^2 - 1}{2\beta}, r_2 = \frac{\beta^2 + 1}{2\beta}, \beta = \left[ \frac{\sqrt{1 + \epsilon^2} + 1}{\epsilon}\right]^{\frac{1}{N}}
-\end{eqnarray}
-The pole-zero plot for $N=4$ looks like,
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\columnwidth]{figs/pole_zero.png}
-    \caption{pole-zero plot}
-    \label{fig:p0}
-\end{figure}
-\newline
-The roots are generated by the following code,
+\begin{align}
+    p(k) = -\sinh{\phi}\sin{\phi(k)}+j\cosh{\phi}\cos{\phi(k)}
+\end{align}
+where
+\begin{align}
+    \phi &= \frac{1}{N}\sinh^{-1}{\brak{\frac{1}{\epsilon}}} \\
+    \phi(k) &= \frac{(2k+1)}{N}\pi \hspace{5pt} k = 0, \dots, N-1
+\end{align}
+
+The following code generates the poles for $N=4$, stores it in a .txt file and plots the pole-zero plot in Figure 1,
 \begin{lstlisting}
     https://github.com/Ameen-etc/Filter-Design/blob/main/codes/pole_zero.py
 \end{lstlisting}
-and then stored in the .txt file
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\columnwidth]{figs/pole-zero.png}
+    \caption{pole-zero plot}
+    \label{fig:p0}
+\end{figure}
+And the poles are stored into the following .txt file,
 \begin{lstlisting}
-    https://github.com/Ameen-etc/Filter-Design/blob/main/codes/roots.txt
+    https://github.com/Ameen-etc/Filter-Design/blob/main/codes/poles.txt
 \end{lstlisting}
+
 Thus, for N even, the low-pass stable Chebyschev filter, with a gain $G$ has the form (Only the poles on the left side of the $j\omega$ axis would be considered to ensure stability of the filter)
 \begin{equation}
 \label{poleleft}
-H_{a,LP}(s_L) = \frac{G_{LP}}{\prod_{k = 1}^{\frac{N}{2}}(s_L^2 - 2r_1\cos\phi_ks_L + r_1^2\cos^2\phi_k + r_2^2 \sin^2\phi_k)}
+H_{a,LP}(s_L) = \frac{G_{LP}}{(s_L-p(1))(s_L-p(2))(s_L-p(3))(s_L-p(4))}
 \end{equation}
-Substituting $N = 4$, $\epsilon = 0.4$ and $H_{a,LP}(j) = \frac{1}{\sqrt{1+\epsilon^2}}$, from (\ref{lppoles}) and (\ref{poleleft}), we obtain 
+Substituting $N = 4$, $\epsilon = 0.4$ and $H_{a,LP}(j) = \frac{1}{\sqrt{1+\epsilon^2}}$, we obtain 
 \begin{equation}
 \label{lpfinal}
 H_{a,LP}(s_L) = \frac{0.3125}{s_L^4 + 1.1068s_L^3 + 1.6125s_L^2+0.9140s_L + 0.3366}
 \end{equation}
 
-In Figure 3 we plot $|H(j\Omega)|$ using (\ref{lpsqfinal}) and (\ref{lpfinal}), thereby verifying that our low-pass Chebyschev filter design meets the specifications.
+In Figure 2 we plot $|H(j\Omega)|$ using (\ref{lpsqfinal}) and (\ref{lpfinal}), thereby verifying that our low-pass Chebyschev filter design meets the specifications.
 \item {\em The Band Pass Chebyschev Filter:}  The analog bandpass filter is obtained from (\ref{lpfinal}) by substituting
 $s_L = \frac{s^2 + \Omega_0^2}{Bs}$.  Hence
 \begin{equation}
@@ -133,12 +195,17 @@ H_{a,BP}(s) = G_{BP}H_{a,LP}(s_L)\vert_{s_L = \frac{s^2 + \Omega_0^2}{Bs}},
 \end{equation}
 where $G_{BP}$ is the gain of the bandpass filter.  After appropriate substitutions, and evaluating the gain 
 such that $H_{a,BP}(j\Omega_{p1}) = 1$, we obtain
-{\tiny
+{
+\tiny
 \begin{equation}
 \label{bpfinal}
 H_{a,BP}(s) = \frac{4.3489\times 10^{-5}s^4}{s^8+0.1179s^7+1.4320s^6+0.1262s^5+0.7625s^4+0.0446s^3+0.1789s^2+0.0052s+0.0156}
 \end{equation}
 }
+Where,
+\begin{align}
+    G_{BP} = 1.0788
+\end{align}
 The above substitution is done by the following code,
 \begin{lstlisting}
     https://github.com/Ameen-etc/Filter-Design/blob/main/codes/coeff_analog.py
@@ -147,7 +214,7 @@ And the coefficients are stored into the .txt file,
 \begin{lstlisting}
     https://github.com/Ameen-etc/Filter-Design/blob/main/codes/coefficients_analog.txt
 \end{lstlisting}
-In Figure 4, we plot $\vert H_{a,BP}(j\Omega)\vert$ as a function of $\Omega$ for both positve as
+In Figure 3, we plot $\vert H_{a,BP}(j\Omega)\vert$ as a function of $\Omega$ for both positve as
 well as negative frequencies.  We find that the passband and stopband frequencies in the figure
 match well with those obtained analytically through the bilinear transformation.
 \end{enumerate}
@@ -197,7 +264,7 @@ And the the coefficients are then stored in this .txt file,
 \begin{lstlisting}
     https://github.com/Ameen-etc/Filter-Design/blob/main/codes/coefficients_digital.txt
 \end{lstlisting}
-The plot of $|H_{d,BP}(z)|$ with respect to the normalized angular freqency (normalizing factor $\pi$) is available in Figure 5.  Again we
+The plot of $|H_{d,BP}(z)|$ with respect to the normalized angular freqency (normalizing factor $\pi$) is available in Figure 4.  Again we
 find that the passband and stopband frequencies meet the specifications well enough.
 \begin{figure}
 \label{fig4}
@@ -268,7 +335,7 @@ From (\ref{firlpdef}) and (\ref{rect}), we obtain the desired lowpass filter imp
 h_{lp}(n) &=& \frac{\sin(\frac{n\pi}{40})}{n\pi} \indent -100 \leq n \leq 100 \nonumber \\
 &=& 0, \hspace{2cm} \mbox{otherwise}
 \end{eqnarray}
-The response of the filter in (\ref{firlpfinal}) is shown in Figure 6.
+The response of the filter in (\ref{firlpfinal}) is shown in Figure 5.
 
 \begin{figure}
 \label{fig5}
@@ -290,7 +357,7 @@ h_{bp}(n) &=& \frac{2\sin(\frac{n\pi}{40}) \cos(0.342n\pi)}{n\pi} \indent -100 \
 &=& 0, \hspace{4cm} \mbox{otherwise}
 \end{eqnarray}
 %
-The frequency response of the FIR bandpass filter designed to meet the given specifications is plotted in Figure 7.
+The frequency response of the FIR bandpass filter designed to meet the given specifications is plotted in Figure 6.
 \begin{figure}[h!]
 \label{fig6}
 \includegraphics[width = 15cm]{figs/figure6.png}
