@@ -22,7 +22,7 @@ for k in range(1, 2*N+1):
 # Save poles and corresponding x values to a text file
 with open('poles.txt', 'w') as file:
     for x, pole in zip(x_values, poles):
-        file.write(f'{x} {pole.real} {pole.imag}\n')
+        file.write(f'{pole.real} {pole.imag}\n')
 
 # Separate left and right poles
 left_poles = [pole for pole in poles if pole.real < 0]
